@@ -9,6 +9,12 @@ _start:
   movw %ax, %ss         # 5. Clear Stack Segment (%ss = 0x0000)
   movw $0x7c00, %sp     # 6. Set Stack Pointer just below bootloader
 
+  # Enable Fast A20 Gate
+  inb  $0x92, %al         # Read System Control Port A
+  orb  $0x02, %al         # Set bit 1 (enable A20)
+  andb $0xfe, %al         # Clear bit 0 (safety mask so we don't trigger CPU reset)
+  outb %al, $0x92         # Write back to System Control Port A
+
   lgdtl gdt_descriptor   # 7. Load Global Descriptor Table register
 
   movl %cr0, %eax       # 8. Read Control Register 0
