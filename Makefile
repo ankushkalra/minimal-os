@@ -14,7 +14,10 @@ boot.o: boot.s
 run: boot.bin
 	$(QEMU) -drive format=raw,file=$<
 
-clean:
-	rm -f boot.o
+run-debug: boot.bin
+	$(QEMU) -drive format=raw,file=$< -d int,cpu_reset -no-reboot
 
-.PHONY: clean
+clean:
+	rm -f boot.o boot.bin
+
+.PHONY: clean run run-debug
